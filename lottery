@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 周年慶抽獎系統</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #d4af37; --dark: #0f0c29; }
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        h1 { color: var(--gold); margin-bottom: 2rem; font-size: 1.8rem; }
+        .input-box {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 12px;
+            width: 100%;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            box-sizing: border-box;
+        }
+        .btn {
+            background: linear-gradient(45deg, #d4af37, #f9d976);
+            color: #1a1a2e;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212,175,55,0.4); }
+        #slot { font-size: 4rem; font-weight: bold; color: var(--gold); margin: 20px 0; height: 100px; display: flex; align-items: center; justify-content: center; }
+        .prize-item {
+            background: rgba(255,255,255,0.1);
+            margin: 8px 0;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            transition: 0.2s;
+        }
+        .prize-item:hover { background: var(--gold); color: black; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>2026 周年慶抽獎</h1>
+    
+    <div id="view-login">
+        <input type="text" id="code" class="input-box" placeholder="請輸入 6 位數驗證碼">
+        <button class="btn" onclick="onStartDraw()">開始抽獎</button>
+    </div>
+
+    <div id="view-anim" style="display:none;">
+        <div id="slot">?</div>
+        <p>幸運等級抽取中...</p>
+    </div>
+</div>
+
+<script>
+    // ---------------------------------------------------------
+    // 重要：請在此處填入你 Google Apps Script 的「網頁應用程式 URL」
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyzPTHSx9vU7ydw1UJyDbXSxUdl_bbxnALfzz-vuQdcgRScMzaLJJUV-ysmRKOiiHQR/exec';
+    // ---------------------------------------------------------
+
+    let userCode = "";
+
+    async function onStartDraw() {
+        userCode = document.getElementById('code').value;
+        if (!userCode) return Swal.fire("提示", "請輸入驗證碼", "warning");
+
+        const btn = document.querySelector('.btn');
+        btn.disabled = true;
+        btn.innerText = "驗證中...";
+
+        try {
+            const resp = await fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify({ action: "verifyAndDraw", code: userCode })
+            });
+            const res = await resp.json();
+
+            if (!res.success) {
+                Swal.fire("錯誤", res.msg, "error");
+                btn.disabled = false;
+                btn.innerText = "開始抽獎";
+                return;
+            }
+
+            // 切換到動畫
+            document.getElementById('view-login').style.display = 'none';
+            document.getElementById('view-anim').style.display = 'block';
+            runSlotMachine(res.rank, res.prizes);
+
+        } catch (e) {
+            Swal.fire("錯誤", "連線失敗，請確認 Script URL 是否正確或已部署為「所有人」", "error");
+            btn.disabled = false;
+        }
+    }
+
+    function runSlotMachine(finalRank, prizes) {
+        const ranks = ['S', 'A', 'B', 'C', 'D', 'E', 'F'];
+        const slot = document.getElementById('slot');
+        let count = 0;
+        
+        const timer = setInterval(() => {
+            slot.innerText = ranks[Math.floor(Math.random() * ranks.length)];
+            if (++count > 25) {
+                clearInterval(timer);
+                slot.innerText = finalRank;
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                showPrizeSelection(finalRank, prizes);
+            }
+        }, 80);
+    }
+
+    function showPrizeSelection(rank, prizes) {
+        let html = '<div style="margin-top:15px; text-align:left;">';
+        prizes.forEach(p => {
+            html += `<div class="prize-item" onclick="onPickPrize('${rank}', '${p}')"><span>${p}</span><span>選擇</span></div>`;
+        });
+        html += '</div>';
+
+        Swal.fire({
+            title: `恭喜中 ${rank} 賞！`,
+            html: html,
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            background: '#16213e',
+            color: '#fff'
+        });
+    }
+
+    async function onPickPrize(rank, prizeName) {
+        Swal.fire({ title: '處理中...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+        const resp = await fetch(scriptURL, {
+            method: 'POST',
+            body: JSON.stringify({ 
+                action: "confirmSelection", 
+                code: userCode, 
+                rank: rank, 
+                prizeName: prizeName 
+            })
+        });
+        const res = await resp.json();
+
+        if (res.success) {
+            Swal.fire("領取成功", `已為您保留：${prizeName}`, "success").then(() => location.reload());
+        } else {
+            Swal.fire("領取失敗", res.msg, "error");
+        }
+    }
+</script>
+
+</body>
+</html>
