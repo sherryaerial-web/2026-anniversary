@@ -10,85 +10,125 @@
     <style>
         :root { --gold: #e2c29d; --bg: #0d0d16; --glass: rgba(255, 255, 255, 0.05); }
         body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; overflow-x: hidden; }
-        .container { background: var(--glass); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); padding: 3rem 1.5rem; border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); text-align: center; width: 90%; max-width: 380px; box-shadow: 0 40px 100px rgba(0,0,0,0.8); }
-        h1 { font-family: 'Bodoni Moda', serif; font-size: 2.3rem; color: var(--gold); margin: 0; letter-spacing: 4px; }
-        .subtitle { font-size: 0.7rem; letter-spacing: 5px; color: rgba(255,255,255,0.3); margin: 0.5rem 0 3rem 0; text-transform: uppercase; }
-        .input-box { width: 100%; padding: 16px; margin-bottom: 1.2rem; border-radius: 18px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; font-size: 0.95rem; box-sizing: border-box; text-align: center; outline: none; }
-        .btn { background: var(--gold); color: #0d0d16; border: none; padding: 18px; border-radius: 18px; width: 100%; font-weight: 500; font-size: 1rem; cursor: pointer; transition: 0.4s; letter-spacing: 3px; }
-        #slot { font-family: 'Bodoni Moda', serif; font-size: 5.5rem; color: var(--gold); margin: 30px 0; height: 120px; display: flex; align-items: center; justify-content: center; }
+        .container { background: var(--glass); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); padding: 3.5rem 1.5rem; border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); text-align: center; width: 90%; max-width: 380px; box-shadow: 0 40px 100px rgba(0,0,0,0.8); }
+        
+        /* 標題優化：分行且調整層次 */
+        .title-group { margin-bottom: 2.5rem; }
+        h1 { font-family: 'Bodoni Moda', serif; font-size: 1.6rem; color: var(--gold); margin: 0; letter-spacing: 2px; line-height: 1.3; }
+        h1 span { display: block; font-size: 2.1rem; margin-top: 5px; }
+        
+        .subtitle { font-size: 0.85rem; letter-spacing: 6px; color: rgba(255,255,255,0.4); margin-top: 0.8rem; font-weight: 300; }
+        
+        .input-box { width: 100%; padding: 18px; margin-bottom: 1.2rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.4); color: #fff; font-size: 0.95rem; box-sizing: border-box; text-align: center; outline: none; transition: 0.3s; }
+        .input-box:focus { border-color: var(--gold); background: rgba(0,0,0,0.6); }
+        
+        .btn { background: var(--gold); color: #0d0d16; border: none; padding: 20px; border-radius: 20px; width: 100%; font-weight: 500; font-size: 1.1rem; cursor: pointer; transition: 0.4s; letter-spacing: 5px; margin-top: 10px; }
+        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        
+        #slot { font-family: 'Bodoni Moda', serif; font-size: 6rem; color: var(--gold); margin: 30px 0; height: 120px; display: flex; align-items: center; justify-content: center; text-shadow: 0 0 30px rgba(226,194,157,0.4); }
+        
         .prize-item { background: rgba(255,255,255,0.04); margin: 12px 0; padding: 16px; border-radius: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
-        .prize-item:hover { background: rgba(226, 194, 157, 0.1); border-color: var(--gold); }
-        .prize-item span:first-child { font-size: 0.85rem; flex: 1; text-align: left; padding-right: 8px; }
-        .prize-item span:last-child { font-size: 0.65rem; color: var(--gold); border: 1px solid var(--gold); padding: 3px 8px; border-radius: 6px; flex-shrink: 0; }
-        .notice-text { color: #ffab00; font-size: 0.8rem; margin-bottom: 15px; display: block; letter-spacing: 1px; }
+        .prize-item:hover { background: rgba(226, 194, 157, 0.12); border-color: var(--gold); }
+        .prize-item span:first-child { font-size: 0.9rem; flex: 1; text-align: left; padding-right: 8px; line-height: 1.4; }
+        .prize-item span:last-child { font-size: 0.7rem; color: var(--gold); border: 1px solid var(--gold); padding: 4px 10px; border-radius: 8px; flex-shrink: 0; letter-spacing: 1px; }
+        
+        .notice-text { color: #e2c29d; font-size: 0.85rem; margin-bottom: 15px; display: block; font-weight: 300; }
+        
+        /* SweetAlert 樣式微調 */
+        .swal2-popup { border-radius: 30px !important; border: 1px solid rgba(255,255,255,0.1) !important; }
+        .swal2-title { font-weight: 400 !important; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Anniversary</h1>
-    <div class="subtitle">2026 Special Draw</div>
-    <div id="view-login">
-        <select id="email-select" class="input-box"><option value="">Authenticating...</option></select>
-        <input type="text" id="code" class="input-box" placeholder="CODE">
-        <button class="btn" id="main-btn" onclick="onStartDraw()">ENTER</button>
+    <div class="title-group">
+        <h1>2026 Sherry Aerial Studio<span>Anniversary</span></h1>
+        <div class="subtitle">抽獎小程式</div>
     </div>
+
+    <div id="view-login">
+        <select id="email-select" class="input-box">
+            <option value="">讀取名單中...</option>
+        </select>
+        <input type="text" id="code" class="input-box" placeholder="輸入指定密碼">
+        <button class="btn" id="main-btn" onclick="onStartDraw()">抽獎</button>
+    </div>
+
     <div id="view-anim" style="display:none;">
         <div id="slot">?</div>
-        <div class="subtitle" style="opacity: 0.5;">Unveiling your prize...</div>
+        <div class="subtitle" id="anim-text">抽獎中...</div>
     </div>
 </div>
 
 <script>
+    // ⚠️ 請確保使用你最新的 Apps Script 部署網址
     const scriptURL = 'https://script.google.com/macros/s/AKfycbyzPTHSx9vU7ydw1UJyDbXSxUdl_bbxnALfzz-vuQdcgRScMzaLJJUV-ysmRKOiiHQR/exec';
     let userEmail = "", userCode = "";
-    let cachedPrizes = []; // 用於暫存獎項，方便返回時重新載入
+    let cachedPrizes = [];
 
+    // 初始化名單
     window.onload = async () => {
         try {
             const resp = await fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "getEmailList" }) });
             const res = await resp.json();
             const select = document.getElementById('email-select');
-            select.innerHTML = '<option value="">Identity</option>';
+            select.innerHTML = '<option value="">請選擇您的OB帳號(e-mail帳號)</option>';
             res.emails.forEach(e => select.innerHTML += `<option value="${e}">${e}</option>`);
-        } catch(e) { }
+        } catch(e) { 
+            document.getElementById('email-select').innerHTML = '<option value="">連線錯誤，請刷新頁面</option>';
+        }
     };
 
+    // 抽獎主流程
     async function onStartDraw() {
         userEmail = document.getElementById('email-select').value;
         userCode = document.getElementById('code').value.trim();
-        if(!userEmail || !userCode) return;
         
-        document.getElementById('main-btn').innerText = "VERIFYING...";
-        const resp = await fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "verifyAndDraw", email: userEmail, code: userCode }) });
-        const res = await resp.json();
-        
-        if(!res.success) {
-            Swal.fire({ text: res.msg, background: '#111', color: '#fff', confirmButtonColor: '#e2c29d' });
-            document.getElementById('main-btn').innerText = "ENTER";
+        if(!userEmail || !userCode) {
+            Swal.fire({ text: '請完整填寫帳號與密碼', background: '#111', color: '#fff', confirmButtonColor: '#e2c29d' });
             return;
         }
-
-        cachedPrizes = res.prizes; // 存入暫存
-        document.getElementById('view-login').style.display = 'none';
-        document.getElementById('view-anim').style.display = 'block';
-
-        let count = 0;
-        const itv = setInterval(() => {
-            document.getElementById('slot').innerText = ['S','A','B','C','D','E','F'][Math.floor(Math.random()*7)];
-            if(++count > 35) {
-                clearInterval(itv);
-                document.getElementById('slot').innerText = res.rank;
-                confetti({ particleCount: 150, colors: ['#e2c29d', '#ffffff'], origin: {y: 0.7} });
-                showPrizes(res.rank, cachedPrizes);
+        
+        // 修正標籤：確認中
+        document.getElementById('main-btn').innerText = "確認中...";
+        
+        try {
+            const resp = await fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "verifyAndDraw", email: userEmail, code: userCode }) });
+            const res = await resp.json();
+            
+            if(!res.success) {
+                Swal.fire({ text: res.msg, background: '#111', color: '#fff', confirmButtonColor: '#e2c29d' });
+                document.getElementById('main-btn').innerText = "抽獎";
+                return;
             }
-        }, 80);
+
+            cachedPrizes = res.prizes;
+            document.getElementById('view-login').style.display = 'none';
+            document.getElementById('view-anim').style.display = 'block';
+
+            let count = 0;
+            const itv = setInterval(() => {
+                document.getElementById('slot').innerText = ['S','A','B','C','D','E','F'][Math.floor(Math.random()*7)];
+                if(++count > 35) {
+                    clearInterval(itv);
+                    document.getElementById('slot').innerText = res.rank;
+                    // 初次中獎小煙火
+                    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#e2c29d', '#ffffff'] });
+                    showPrizes(res.rank, cachedPrizes);
+                }
+            }, 80);
+        } catch(e) {
+            Swal.fire({ text: '連線超時，請檢查網路後重試', background: '#111', color: '#fff' });
+            document.getElementById('main-btn').innerText = "抽獎";
+        }
     }
 
+    // 顯示獎項清單
     function showPrizes(rank, prizes) {
         let html = '<span class="notice-text">請選擇一個獎項，送出後即無法更換</span>';
         html += '<div style="max-height:350px; overflow-y:auto; padding-right:5px;">';
         prizes.forEach(p => {
-            html += `<div class="prize-item" onclick="confirmPick('${rank}','${p}')"><span>${p}</span><span>SELECT</span></div>`;
+            html += `<div class="prize-item" onclick="confirmPick('${rank}','${p}')"><span>${p}</span><span>選取</span></div>`;
         });
 
         Swal.fire({ 
@@ -99,15 +139,15 @@
             allowEscapeKey: false,
             background: 'rgba(13, 13, 22, 0.98)', 
             color: '#fff',
-            footer: '<span style="color:rgba(255,255,255,0.4); font-size:10px;">提醒：關閉頁面將無法重抽，請務必完成選取</span>'
+            footer: '<span style="color:rgba(255,255,255,0.3); font-size:11px;">※ 關閉頁面將導致無法領獎，請務必完成選取</span>'
         });
     }
 
-    // 修正：點擊返回時重新呼叫 showPrizes
+    // 二次確認
     function confirmPick(rank, pName) {
         Swal.fire({
             title: '確認選擇',
-            text: `您確定要選擇「${pName}」嗎？`,
+            text: `確定選擇「${pName}」嗎？`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#e2c29d',
@@ -120,25 +160,43 @@
             if (result.isConfirmed) {
                 onPick(rank, pName);
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-                // 如果點擊返回，重新打開選單
                 showPrizes(rank, cachedPrizes);
             }
         });
     }
 
+    // 送出選擇
     async function onPick(rank, pName) {
-        Swal.fire({ title: 'Recording...', background: '#111', color: '#fff', didOpen: () => Swal.showLoading() });
-        const resp = await fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "confirmSelection", email: userEmail, code: userCode, rank: rank, prizeName: pName }) });
-        const res = await resp.json();
-        if(res.success) {
-            Swal.fire({ 
-                icon:'success', 
-                title: 'Claimed', 
-                text: `登記成功：${pName}`, 
-                background: '#111', 
-                color: '#fff', 
-                confirmButtonColor: '#e2c29d' 
-            }).then(() => location.reload());
+        Swal.fire({ title: '紀錄中...', background: '#111', color: '#fff', didOpen: () => Swal.showLoading() });
+        
+        try {
+            const resp = await fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "confirmSelection", email: userEmail, code: userCode, rank: rank, prizeName: pName }) });
+            const res = await resp.json();
+            
+            if(res.success) {
+                // 大功告成：放金銀煙火
+                const end = Date.now() + 2 * 1000;
+                const colors = ['#e2c29d', '#ffffff'];
+                (function frame() {
+                    confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: colors });
+                    confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: colors });
+                    if (Date.now() < end) { requestAnimationFrame(frame); }
+                }());
+
+                // 修正標籤：恭喜中獎 / 獎項：
+                Swal.fire({ 
+                    icon: 'success',
+                    iconColor: '#e2c29d',
+                    title: '恭喜中獎', 
+                    text: `獎項：${pName}`, 
+                    background: '#111', 
+                    color: '#fff', 
+                    confirmButtonColor: '#e2c29d',
+                    confirmButtonText: '完成'
+                }).then(() => location.reload());
+            }
+        } catch(e) {
+            Swal.fire({ text: '紀錄失敗，請聯絡管理員', background: '#111', color: '#fff' });
         }
     }
 </script>
