@@ -39,9 +39,9 @@
 </div>
 
 <script>
-    // ⚠️ 務必填入你最後一次部署的 Web App URL
     const scriptURL = 'https://script.google.com/macros/s/AKfycbyzPTHSx9vU7ydw1UJyDbXSxUdl_bbxnALfzz-vuQdcgRScMzaLJJUV-ysmRKOiiHQR/exec';
     let userEmail = "", userCode = "";
+    let cachedPrizes = []; // 用於暫存獎項，方便返回時重新載入
 
     window.onload = async () => {
         try {
@@ -68,6 +68,7 @@
             return;
         }
 
+        cachedPrizes = res.prizes; // 存入暫存
         document.getElementById('view-login').style.display = 'none';
         document.getElementById('view-anim').style.display = 'block';
 
@@ -78,7 +79,7 @@
                 clearInterval(itv);
                 document.getElementById('slot').innerText = res.rank;
                 confetti({ particleCount: 150, colors: ['#e2c29d', '#ffffff'], origin: {y: 0.7} });
-                showPrizes(res.rank, res.prizes);
+                showPrizes(res.rank, cachedPrizes);
             }
         }, 80);
     }
@@ -102,22 +103,25 @@
         });
     }
 
-    // 新增：選擇後的二次確認機制
+    // 修正：點擊返回時重新呼叫 showPrizes
     function confirmPick(rank, pName) {
         Swal.fire({
             title: '確認選擇',
-            text: `您確定要選擇「${pName}」嗎？送出後將無法更改內容。`,
+            text: `您確定要選擇「${pName}」嗎？`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#e2c29d',
             cancelButtonColor: '#333',
-            confirmButtonText: '確定，送出',
+            confirmButtonText: '確定',
             cancelButtonText: '返回',
             background: '#111',
             color: '#fff'
         }).then((result) => {
             if (result.isConfirmed) {
                 onPick(rank, pName);
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                // 如果點擊返回，重新打開選單
+                showPrizes(rank, cachedPrizes);
             }
         });
     }
