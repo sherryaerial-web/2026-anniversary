@@ -13,13 +13,14 @@
         .container { background: var(--glass); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); padding: 3rem 1.5rem; border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); text-align: center; width: 90%; max-width: 380px; box-shadow: 0 40px 100px rgba(0,0,0,0.8); }
         h1 { font-family: 'Bodoni Moda', serif; font-size: 2.3rem; color: var(--gold); margin: 0; letter-spacing: 4px; }
         .subtitle { font-size: 0.7rem; letter-spacing: 5px; color: rgba(255,255,255,0.3); margin: 0.5rem 0 3rem 0; text-transform: uppercase; }
-        .input-box { width: 100%; padding: 16px; margin-bottom: 1.2rem; border-radius: 18px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; font-size: 0.95rem; box-sizing: border-box; text-align: center; outline: none; transition: 0.3s; }
+        .input-box { width: 100%; padding: 16px; margin-bottom: 1.2rem; border-radius: 18px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; font-size: 0.95rem; box-sizing: border-box; text-align: center; outline: none; }
         .btn { background: var(--gold); color: #0d0d16; border: none; padding: 18px; border-radius: 18px; width: 100%; font-weight: 500; font-size: 1rem; cursor: pointer; transition: 0.4s; letter-spacing: 3px; }
-        #slot { font-family: 'Bodoni Moda', serif; font-size: 5.5rem; color: var(--gold); margin: 30px 0; height: 120px; display: flex; align-items: center; justify-content: center; text-shadow: 0 0 20px rgba(226,194,157,0.3); }
+        #slot { font-family: 'Bodoni Moda', serif; font-size: 5.5rem; color: var(--gold); margin: 30px 0; height: 120px; display: flex; align-items: center; justify-content: center; }
         .prize-item { background: rgba(255,255,255,0.04); margin: 12px 0; padding: 16px; border-radius: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
         .prize-item:hover { background: rgba(226, 194, 157, 0.1); border-color: var(--gold); }
         .prize-item span:first-child { font-size: 0.85rem; flex: 1; text-align: left; padding-right: 8px; }
-        .prize-item span:last-child { font-size: 0.65rem; color: var(--gold); border: 1px solid var(--gold); padding: 3px 8px; border-radius: 6px; }
+        .prize-item span:last-child { font-size: 0.65rem; color: var(--gold); border: 1px solid var(--gold); padding: 3px 8px; border-radius: 6px; flex-shrink: 0; }
+        .notice-text { color: #ffab00; font-size: 0.8rem; margin-bottom: 15px; display: block; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -83,19 +84,41 @@
     }
 
     function showPrizes(rank, prizes) {
-        let html = '<div style="margin-top:15px; max-height:350px; overflow-y:auto; padding-right:5px;">';
+        let html = '<span class="notice-text">請選擇一個獎項，送出後即無法更換</span>';
+        html += '<div style="max-height:350px; overflow-y:auto; padding-right:5px;">';
         prizes.forEach(p => {
-            html += `<div class="prize-item" onclick="onPick('${rank}','${p}')"><span>${p}</span><span>SELECT</span></div>`;
+            html += `<div class="prize-item" onclick="confirmPick('${rank}','${p}')"><span>${p}</span><span>SELECT</span></div>`;
         });
+
         Swal.fire({ 
             title: `RANK ${rank}`, 
             html: html + '</div>', 
             showConfirmButton: false, 
-            allowOutsideClick: false, // 防止點擊背景關閉網頁導致重抽
+            allowOutsideClick: false, 
             allowEscapeKey: false,
             background: 'rgba(13, 13, 22, 0.98)', 
             color: '#fff',
-            footer: '<span style="color:rgba(255,255,255,0.4); font-size:10px;">提醒：關閉頁面將無法重抽，請直接點選獎項</span>'
+            footer: '<span style="color:rgba(255,255,255,0.4); font-size:10px;">提醒：關閉頁面將無法重抽，請務必完成選取</span>'
+        });
+    }
+
+    // 新增：選擇後的二次確認機制
+    function confirmPick(rank, pName) {
+        Swal.fire({
+            title: '確認選擇',
+            text: `您確定要選擇「${pName}」嗎？送出後將無法更改內容。`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#e2c29d',
+            cancelButtonColor: '#333',
+            confirmButtonText: '確定，送出',
+            cancelButtonText: '返回',
+            background: '#111',
+            color: '#fff'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                onPick(rank, pName);
+            }
         });
     }
 
@@ -104,7 +127,14 @@
         const resp = await fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "confirmSelection", email: userEmail, code: userCode, rank: rank, prizeName: pName }) });
         const res = await resp.json();
         if(res.success) {
-            Swal.fire({ icon:'success', title: 'Claimed', text: `登記成功：${pName}`, background: '#111', color: '#fff', confirmButtonColor: '#e2c29d' }).then(() => location.reload());
+            Swal.fire({ 
+                icon:'success', 
+                title: 'Claimed', 
+                text: `登記成功：${pName}`, 
+                background: '#111', 
+                color: '#fff', 
+                confirmButtonColor: '#e2c29d' 
+            }).then(() => location.reload());
         }
     }
 </script>
