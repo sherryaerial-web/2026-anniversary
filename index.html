@@ -3,148 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sherry Aerial 2026 Anniversary</title>
+    <title>Sherry Aerial Anniversary</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;1,500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #e2c29d; --bg: #11111d; --glass: rgba(255, 255, 255, 0.08); }
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background: radial-gradient(circle at top right, #2c2c44, #11111d, #09090f);
-            color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
-        }
-        .container {
-            background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            padding: 3.5rem 2rem; border-radius: 40px; border: 1px solid rgba(255,255,255,0.12);
-            text-align: center; width: 85%; max-width: 380px; box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-        }
-        h1 { font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: 2.4rem; color: var(--gold); margin: 0 0 0.5rem 0; letter-spacing: 4px; }
-        .subtitle { font-size: 0.75rem; letter-spacing: 5px; color: rgba(255,255,255,0.4); margin-bottom: 3rem; text-transform: uppercase; }
-        .input-box {
-            width: 100%; padding: 16px; margin-bottom: 1.2rem; border-radius: 18px; 
-            border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.25);
-            color: #fff; font-size: 0.95rem; box-sizing: border-box; transition: 0.4s; text-align: center;
-        }
-        .input-box:focus { border-color: var(--gold); outline: none; background: rgba(0,0,0,0.4); }
-        .btn {
-            background: var(--gold); color: #11111d; border: none; padding: 18px; border-radius: 18px;
-            width: 100%; font-weight: 500; font-size: 1rem; cursor: pointer; transition: 0.4s; letter-spacing: 3px; margin-top: 15px;
-        }
-        .btn:hover { letter-spacing: 6px; opacity: 0.95; transform: translateY(-2px); }
-        #slot { font-family: 'Bodoni Moda', serif; font-size: 5.5rem; color: var(--gold); margin: 40px 0; height: 120px; display: flex; align-items: center; justify-content: center; text-shadow: 0 0 25px rgba(226,194,157,0.3); }
-        .prize-item {
-            background: rgba(255,255,255,0.06); margin: 12px 0; padding: 20px;
-            border-radius: 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.08); transition: 0.3s;
-        }
-        .prize-item:hover { background: rgba(226, 194, 157, 0.15); border-color: var(--gold); }
-        .prize-item span:last-child { font-size: 0.7rem; letter-spacing: 1px; color: var(--gold); border: 1px solid var(--gold); padding: 2px 8px; border-radius: 5px; }
+        :root { --gold: #e2c29d; --bg: #0d0d16; --glass: rgba(255, 255, 255, 0.05); }
+        body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: var(--glass); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); padding: 3.5rem 2rem; border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); text-align: center; width: 85%; max-width: 360px; box-shadow: 0 40px 100px rgba(0,0,0,0.8); }
+        h1 { font-family: 'Bodoni Moda', serif; font-size: 2.3rem; color: var(--gold); margin: 0; letter-spacing: 4px; }
+        .subtitle { font-size: 0.7rem; letter-spacing: 5px; color: rgba(255,255,255,0.3); margin: 0.5rem 0 3rem 0; text-transform: uppercase; }
+        .input-box { width: 100%; padding: 16px; margin-bottom: 1.2rem; border-radius: 18px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); color: #fff; font-size: 0.95rem; box-sizing: border-box; text-align: center; outline: none; transition: 0.3s; }
+        .input-box:focus { border-color: var(--gold); }
+        .btn { background: var(--gold); color: #0d0d16; border: none; padding: 18px; border-radius: 18px; width: 100%; font-weight: 500; font-size: 1rem; cursor: pointer; transition: 0.4s; letter-spacing: 3px; }
+        .btn:hover { letter-spacing: 6px; transform: translateY(-2px); opacity: 0.9; }
+        #slot { font-family: 'Bodoni Moda', serif; font-size: 5.5rem; color: var(--gold); margin: 30px 0; height: 120px; display: flex; align-items: center; justify-content: center; text-shadow: 0 0 20px rgba(226,194,157,0.3); }
+        .prize-item { background: rgba(255,255,255,0.04); margin: 12px 0; padding: 20px; border-radius: 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        .prize-item:hover { background: rgba(226, 194, 157, 0.1); border-color: var(--gold); transform: scale(1.02); }
+        .prize-item span:last-child { font-size: 0.7rem; letter-spacing: 1px; color: var(--gold); border: 1px solid var(--gold); padding: 2px 6px; border-radius: 5px; }
     </style>
 </head>
 <body>
-
 <div class="container">
     <h1>Anniversary</h1>
     <div class="subtitle">2026 Special Draw</div>
-    
     <div id="view-login">
-        <select id="email-select" class="input-box">
-            <option value="">Authenticating...</option>
-        </select>
-        <input type="text" id="code" class="input-box" placeholder="Code">
-        <button class="btn" id="draw-btn" onclick="onStartDraw()">ENTER</button>
+        <select id="email-select" class="input-box"><option value="">Loading list...</option></select>
+        <input type="text" id="code" class="input-box" placeholder="CODE">
+        <button class="btn" id="main-btn" onclick="onStartDraw()">ENTER</button>
     </div>
-
     <div id="view-anim" style="display:none;">
         <div id="slot">?</div>
-        <div class="subtitle" style="margin-top:20px; opacity: 0.6;">Selecting Grace</div>
+        <div class="subtitle" style="opacity: 0.5;">Drawing your grace...</div>
     </div>
 </div>
 
 <script>
-    // ---------------------------------------------------------
-    // 重要：請將此處替換為你「新部署」後的 Web App URL
+    // ⚠️ 替換為你最後一次「新部署」的 Web App URL
     const scriptURL = 'https://script.google.com/macros/s/AKfycbyzPTHSx9vU7ydw1UJyDbXSxUdl_bbxnALfzz-vuQdcgRScMzaLJJUV-ysmRKOiiHQR/exec';
-    // ---------------------------------------------------------
-
     let userEmail = "", userCode = "";
 
-    // 頁面初始化：從後端抓取名冊
+    // 初始化載入清單
     window.onload = async () => {
         try {
             const resp = await fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "getEmailList" }) });
             const res = await resp.json();
             const select = document.getElementById('email-select');
-            if (res.success && res.emails.length > 0) {
-                select.innerHTML = '<option value="">Identity</option>';
-                res.emails.forEach(e => select.innerHTML += `<option value="${e}">${e}</option>`);
-            } else { select.innerHTML = '<option value="">Empty List</option>'; }
-        } catch (e) { document.getElementById('email-select').innerHTML = '<option value="">Network error</option>'; }
+            select.innerHTML = '<option value="">Identity</option>';
+            res.emails.forEach(e => select.innerHTML += `<option value="${e}">${e}</option>`);
+        } catch(e) { document.getElementById('email-select').innerHTML = '<option value="">Error</option>'; }
     };
 
-    // 開始抽獎流程
     async function onStartDraw() {
         userEmail = document.getElementById('email-select').value;
         userCode = document.getElementById('code').value.trim();
-        if (!userEmail || !userCode) return Swal.fire({ icon: 'info', title: 'Wait', text: 'Identity & Code are required.', background: '#11111d', color: '#fff' });
+        if(!userEmail || !userCode) return;
+        
+        document.getElementById('main-btn').innerText = "VERIFYING...";
 
-        const btn = document.getElementById('draw-btn');
-        btn.disabled = true; btn.innerText = "VERIFYING...";
+        const resp = await fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "verifyAndDraw", email: userEmail, code: userCode }) });
+        const res = await resp.json();
+        
+        if(!res.success) {
+            Swal.fire({ text: res.msg, background: '#111', color: '#fff', confirmButtonColor: '#e2c29d' });
+            document.getElementById('main-btn').innerText = "ENTER";
+            return;
+        }
 
-        try {
-            const resp = await fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "verifyAndDraw", email: userEmail, code: userCode }) });
-            const res = await resp.json();
-            if (!res.success) {
-                Swal.fire({ icon: 'error', title: 'Denied', text: res.msg, background: '#11111d', color: '#fff' });
-                btn.disabled = false; btn.innerText = "ENTER";
-                return;
-            }
-            document.getElementById('view-login').style.display = 'none';
-            document.getElementById('view-anim').style.display = 'block';
-            runSlotMachine(res.rank, res.prizes);
-        } catch (e) { Swal.fire("Error", "Server is busy.", "error"); btn.disabled = false; }
-    }
+        document.getElementById('view-login').style.display = 'none';
+        document.getElementById('view-anim').style.display = 'block';
 
-    // 抽獎動畫
-    function runSlotMachine(finalRank, prizes) {
         let count = 0;
         const itv = setInterval(() => {
             document.getElementById('slot').innerText = ['S','A','B','C','D','E','F'][Math.floor(Math.random()*7)];
             if(++count > 35) {
                 clearInterval(itv);
-                document.getElementById('slot').innerText = finalRank;
-                confetti({ colors: ['#e2c29d', '#ffffff'], particleCount: 150, spread: 70, origin: { y: 0.6 } });
-                showPrizeSelection(finalRank, prizes);
+                document.getElementById('slot').innerText = res.rank;
+                confetti({ particleCount: 150, colors: ['#e2c29d', '#ffffff'], origin: {y: 0.7} });
+                showPrizes(res.rank, res.prizes);
             }
         }, 80);
     }
 
-    // 重要：顯示獎品選單 (這就是你要的選禮物功能)
-    function showPrizeSelection(rank, prizes) {
-        let html = '<div style="margin-top:20px; max-height: 300px; overflow-y: auto;">';
-        if (prizes.length === 0) {
-            html += '<p style="opacity:0.6;">All prizes in this rank have been claimed.</p>';
-        } else {
-            prizes.forEach(p => html += `<div class="prize-item" onclick="onPickPrize('${rank}', '${p}')"><span>${p}</span><span>SELECT</span></div>`);
-        }
-        Swal.fire({
-            title: `RANK ${rank}`,
-            html: html + '</div>',
-            showConfirmButton: false, allowOutsideClick: false,
-            background: 'rgba(17, 17, 29, 0.98)', color: '#fff'
+    function showPrizes(rank, prizes) {
+        let html = '<div style="margin-top:20px; max-height:300px; overflow-y:auto;">';
+        prizes.forEach(p => {
+            html += `<div class="prize-item" onclick="onPick('${rank}','${p}')"><span>${p}</span><span>SELECT</span></div>`;
+        });
+        Swal.fire({ 
+            title: `RANK ${rank}`, 
+            html: html + '</div>', 
+            showConfirmButton: false, 
+            allowOutsideClick: false, 
+            background: 'rgba(13, 13, 22, 0.95)', 
+            color: '#fff' 
         });
     }
 
-    // 最終儲存
-    async function onPickPrize(rank, prizeName) {
-        Swal.fire({ title: 'Recording...', background: '#11111d', color: '#fff', didOpen: () => Swal.showLoading() });
-        try {
-            const resp = await fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "confirmSelection", email: userEmail, code: userCode, rank: rank, prizeName: prizeName }) });
-            const res = await resp.json();
-            if (res.success) {
-                Swal.fire({ icon: 'success', title: 'Claimed', text: `Gift Reserved: ${prizeName}`, background: '#11111d', color: '#fff' }).then(() => location.reload());
-            } else { Swal.fire("Failed", "Try again later", "error"); }
-        } catch (e) { Swal.fire("Error", "Connection lost", "error"); }
+    async function onPick(rank, pName) {
+        Swal.fire({ title: 'Recording...', background: '#111', color: '#fff', didOpen: () => Swal.showLoading() });
+        const resp = await fetch(scriptURL, { method: 'POST', body: JSON.stringify({ action: "confirmSelection", email: userEmail, code: userCode, rank: rank, prizeName: pName }) });
+        const res = await resp.json();
+        if(res.success) {
+            Swal.fire({ icon:'success', title: 'Claimed', text: `已登記：${pName}`, background: '#111', color: '#fff', confirmButtonColor: '#e2c29d' }).then(() => location.reload());
+        }
     }
 </script>
 </body>
